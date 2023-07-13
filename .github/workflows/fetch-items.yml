@@ -26,9 +26,13 @@ jobs:
           echo "modified=true" >> $GITHUB_ENV
         fi
 
+    - name: Create branch name
+      run: |
+          echo "branch=new-items-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
     - name: Create branch
       run: |
-        git checkout -b "new-items-$(date +'%Y%m%d%H%M%S')"
+        git checkout -b ${{ env.branch }}
 
     - name: Commit changes
       run: |
@@ -41,14 +45,14 @@ jobs:
       uses: ad-m/github-push-action@v0.6.0
       if: env.modified == 'true'
       with:
-        branch: ${{ github.ref }}
+        branch: ${{ env.branch }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Pull Request
       if: env.modified == 'true'
       uses: peter-evans/create-pull-request@v3
       with:
-        branch: ${{ github.ref }}
+        branch: ${{ env.branch }}
         title: Update items fallback
         body: |
           This PR updates the items fallback.
