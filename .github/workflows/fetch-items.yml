@@ -52,6 +52,7 @@ jobs:
       if: env.modified == 'true'
       uses: peter-evans/create-pull-request@v3
       with:
+        base: main
         branch: ${{ env.branch }}
         title: Update items fallback
         body: |
